@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aarambh.ai — Where every journey begins</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root[data-theme="light"] {
+  --bg-page:       #F5F2EC;
+  --bg-card:       #FAF7F1;
+  --bg-surface:    #EDE8DC;
+  --bg-callout:    #EDE8DC;
+  --border:        #DDD6C8;
+  --text-primary:  #1A150E;
+  --text-sec:      #5C5044;
+  --text-muted:    #8A7D6E;
+  --label:         #A8987E;
+  --gold:          #C4A46B;
+  --gold-h:        #B5945E;
+  --shadow:        rgba(0,0,0,0.10);
+  --knob-bg:       #E8E0D0;
+  --knob:          #fff;
+  --audience-bg:   #FAF7F1;
+  --audience-hover:#EDE8DC;
+  --icon-bg:       #EDE8DC;
+}
+:root[data-theme="dark"] {
+  --bg-page:       #0C0B09;
+  --bg-card:       #131210;
+  --bg-surface:    #1A1815;
+  --bg-callout:    #1E1C18;
+  --border:        #2E2820;
+  --text-primary:  #E8DFD0;
+  --text-sec:      #A89D8E;
+  --text-muted:    #6B5F54;
+  --label:         #5A5044;
+  --gold:          #C4A46B;
+  --gold-h:        #D4B47B;
+  --shadow:        rgba(0,0,0,0.6);
+  --knob-bg:       #2A2520;
+  --knob:          #C4A46B;
+  --audience-bg:   #0C0B09;
+  --audience-hover:#1A1815;
+  --icon-bg:       #1A1815;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: clamp(13px, 1.1vw, 18px); scroll-behavior: smooth; }
+body {
+  background: var(--bg-page); font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--text-primary); transition: background 0.3s, color 0.3s; min-height: 100vh;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page); border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 4vw; transition: background 0.3s, border-color 0.3s;
+}
+.nav-logo {
+  font-family: 'DM Serif Display', serif; font-size: 1.2rem;
+  letter-spacing: -0.01em; color: var(--text-primary);
+  cursor: pointer; text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+.nav-center { display: flex; align-items: center; gap: 2rem; }
+.nav-link {
+  font-size: 0.72rem; font-weight: 400; color: var(--text-muted);
+  letter-spacing: 0.04em; cursor: pointer;
+  transition: color 0.2s; background: none; border: none;
+  padding: 0; font-family: 'DM Sans', sans-serif;
+}
+.nav-link:hover { color: var(--text-primary); }
+.nav-link.active { color: var(--text-primary); font-weight: 500; }
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+.toggle-wrap { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; user-select: none; }
+.toggle-label { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); min-width: 2rem; }
+.toggle-track {
+  width: 2.4rem; height: 1.3rem; border-radius: 0.75rem;
+  background: var(--knob-bg); border: 0.5px solid var(--border);
+  position: relative; transition: background 0.3s; flex-shrink: 0;
+}
+.toggle-knob {
+  position: absolute; top: 0.19rem; left: 0.19rem;
+  width: 0.84rem; height: 0.84rem; border-radius: 50%;
+  background: var(--knob); transition: transform 0.25s cubic-bezier(.4,0,.2,1), background 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+[data-theme="dark"] .toggle-knob { transform: translateX(1.05rem); }
+.nav-cta {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em;
+  background: var(--text-primary); color: var(--bg-page);
+  padding: 0.55rem 1.2rem; border-radius: 100px; border: none; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: var(--gold); color: #0f0e0d; }
+
+/* VIEWS */
+.view { display: none; }
+.view.active { display: block; }
+
+/* PAGE WRAP */
+.page-wrap {
+  width: 80vw; margin: 2.5rem auto 4rem;
+  display: flex; flex-direction: column; gap: 2rem;
+}
+
+/* SHARED CARD */
+.card {
+  background: var(--bg-card); border: 0.5px solid var(--border);
+  border-radius: 0.75rem; overflow: hidden;
+  box-shadow: 0 0.4rem 2rem var(--shadow);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.gold-bar { height: 3px; background: linear-gradient(90deg, #c4a46b, #e8c87a, #c4a46b); }
+
+/* HERO */
+.hero-inner {
+  padding: 3rem; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+.hero-eyebrow {
+  font-size: 0.58rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.hero-headline {
+  font-family: 'DM Serif Display', serif; font-size: 3.2rem; line-height: 1.08;
+  letter-spacing: -0.03em; color: var(--text-primary); margin-bottom: 1.25rem;
+}
+.hero-headline em { font-style: italic; color: var(--gold); }
+.hero-sub {
+  font-size: 0.95rem; line-height: 1.75; color: var(--text-sec);
+  font-weight: 300; max-width: 360px; margin-bottom: 2rem;
+}
+.hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.btn-primary {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em;
+  background: var(--text-primary); color: var(--bg-page);
+  padding: 0.7rem 1.5rem; border-radius: 100px; border: none; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-primary:hover { background: var(--gold); color: #0f0e0d; }
+.btn-ghost {
+  font-size: 0.72rem; font-weight: 400; color: var(--text-muted);
+  background: none; border: none; cursor: pointer; transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--text-primary); }
+
+/* HERO VISUAL */
+.hero-visual {
+  background: #0D1117; border-radius: 0.6rem; overflow: hidden;
+  aspect-ratio: 4/3; position: relative;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+  padding: 1.4rem;
+}
+.dashcam-frame {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #0D1117 0%, #1a2533 50%, #0f1a25 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.road-svg { width: 85%; opacity: 0.35; }
+.hud-overlay { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; gap: 0.5rem; }
+.hud-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+.hud-chip {
+  background: rgba(255,255,255,0.08); border: 0.5px solid rgba(255,255,255,0.15);
+  border-radius: 6px; padding: 0.4rem 0.6rem;
+  font-size: 0.58rem; color: rgba(255,255,255,0.65);
+}
+.hud-chip strong { color: #fff; font-weight: 500; display: block; font-size: 0.7rem; }
+.hud-alert {
+  background: rgba(196,123,58,0.2); border: 0.5px solid rgba(196,123,58,0.5);
+  border-radius: 6px; padding: 0.4rem 0.65rem;
+  font-size: 0.58rem; color: #E8A96A; font-weight: 500;
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.pulse-dot {
+  width: 5px; height: 5px; background: #E8A96A; border-radius: 50%; flex-shrink: 0;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+/* SECTION HEADER */
+.card-inner { padding: 2.5rem; }
+.section-eyebrow {
+  font-size: 0.58rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.75rem;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif; font-size: 2rem; line-height: 1.1;
+  letter-spacing: -0.02em; color: var(--text-primary); max-width: 500px; margin-bottom: 2.5rem;
+}
+
+/* AUDIENCE */
+.audience-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--border); border-radius: 0.5rem; overflow: hidden;
+}
+.audience-card {
+  background: var(--audience-bg); padding: 1.5rem 1.25rem;
+  display: flex; flex-direction: column; gap: 0.65rem; transition: background 0.2s;
+}
+.audience-card:hover { background: var(--audience-hover); }
+.audience-icon {
+  width: 2rem; height: 2rem; border-radius: 0.5rem;
+  background: var(--icon-bg); display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+}
+.audience-name { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); }
+.audience-desc { font-size: 0.72rem; color: var(--text-sec); line-height: 1.6; font-weight: 300; }
+
+/* FEATURES */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.feature-card {
+  background: var(--bg-surface); border: 0.5px solid var(--border);
+  border-radius: 0.5rem; padding: 1.4rem 1.2rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.feature-num { font-size: 0.55rem; font-weight: 500; color: var(--gold); letter-spacing: 0.14em; margin-bottom: 0.75rem; }
+.feature-title { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.4rem; }
+.feature-body { font-size: 0.72rem; color: var(--text-sec); line-height: 1.65; font-weight: 300; }
+
+/* TAGLINE */
+.tagline-band { background: #0D1117; padding: 3rem; text-align: center; }
+[data-theme="dark"] .tagline-band { background: #080C10; }
+.tagline-text {
+  font-family: 'DM Serif Display', serif; font-size: 2.8rem; line-height: 1.1;
+  color: #fff; letter-spacing: -0.03em; max-width: 600px; margin: 0 auto 0.6rem;
+}
+.tagline-text em { color: #E8A96A; font-style: italic; }
+.tagline-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); font-weight: 300; margin-bottom: 1.75rem; }
+.tagline-btn {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em;
+  background: var(--gold); color: #0f0e0d;
+  padding: 0.7rem 1.75rem; border-radius: 100px; border: none; cursor: pointer;
+  transition: background 0.2s;
+}
+.tagline-btn:hover { background: #D4B47B; }
+
+/* LETTER */
+.letter-wrap { width: 80vw; margin: 2.5rem auto 4rem; }
+.letter-inner { padding: 2.5rem; padding-bottom: 0; }
+.letterhead {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 0.5rem;
+  border-bottom: 0.5px solid var(--border);
+  padding-bottom: 1.25rem; margin-bottom: 2rem;
+}
+.lh-company {
+  font-family: 'Playfair Display', serif; font-size: 1.4rem;
+  font-weight: 500; color: var(--text-primary);
+}
+.lh-sub { font-size: 0.58rem; color: var(--text-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 0.2rem; }
+.lh-meta { text-align: right; font-size: 0.62rem; color: var(--text-muted); line-height: 1.8; letter-spacing: 0.06em; }
+.salutation { font-size: 1rem; font-style: italic; font-family: 'Playfair Display', serif; color: var(--text-sec); margin-bottom: 1.75rem; }
+.letter-section { margin-bottom: 1.75rem; }
+.sec-label { font-size: 0.55rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--label); margin-bottom: 0.6rem; }
+.sec-p { font-size: 0.88rem; line-height: 1.9; color: var(--text-primary); margin-bottom: 0.9rem; font-family: 'Libre Baskerville', serif; }
+.sec-p:last-child { margin-bottom: 0; }
+.pullquote {
+  background: var(--bg-surface); border-left: 2px solid var(--gold);
+  padding: 1rem 1.25rem; margin-bottom: 1.75rem; transition: background 0.3s;
+}
+.pullquote p { font-size: 1rem; line-height: 1.9; font-style: italic; font-family: 'Playfair Display', serif; color: var(--text-primary); }
+.letter-callout {
+  background: var(--bg-callout); border: 0.5px solid var(--border);
+  border-radius: 0.5rem; padding: 1.25rem 1.5rem; margin-bottom: 2rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.letter-callout p { font-size: 0.88rem; line-height: 1.9; color: var(--text-primary); margin-bottom: 0.5rem; font-family: 'Libre Baskerville', serif; }
+.letter-callout p:last-child { margin-bottom: 0; }
+.signature { border-top: 0.5px solid var(--border); padding: 1.5rem 0 2.5rem; }
+.sign-closing { font-size: 0.85rem; font-style: italic; font-family: 'Playfair Display', serif; color: var(--text-sec); margin-bottom: 1.4rem; }
+.sign-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.2rem; }
+.sign-title { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+
+/* FOOTER */
+footer {
+  padding: 1.5rem 4vw; display: flex; align-items: center; justify-content: space-between;
+  border-top: 0.5px solid var(--border); background: var(--bg-page);
+  transition: background 0.3s, border-color 0.3s;
+}
+.footer-logo { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--text-primary); }
+.footer-logo span { color: var(--gold); }
+.footer-copy { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.04em; }
+
+@media (max-width: 768px) {
+  .page-wrap, .letter-wrap { width: 95vw; }
+  .hero-inner { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
+  .audience-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .card-inner, .letter-inner { padding: 1.5rem; }
+  .hero-headline { font-size: 2.4rem; }
+  .nav-center { display: none; }
+}
+@media (max-width: 480px) {
+  .audience-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo" onclick="showView('home')">Aarambh<span>.ai</span></span>
+  <div class="nav-center">
+    <button class="nav-link" id="nav-letter" onclick="showView('letter')">CEO Letter</button>
+  </div>
+  <div class="nav-right">
+    <div class="toggle-wrap" onclick="toggleTheme()" role="button" aria-label="Toggle theme">
+      <span class="toggle-label" id="themeLabel">Light</span>
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+    </div>
+    <button class="nav-cta">Get early access</button>
+  </div>
+</nav>
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="page-wrap">
+
+    <div class="card">
+      <div class="gold-bar"></div>
+      <div class="hero-inner">
+        <div>
+          <p class="hero-eyebrow">Introducing Aarambh.ai</p>
+          <h1 class="hero-headline">Where every<br><em>journey</em><br>begins safe.</h1>
+          <p class="hero-sub">India's first AI-powered dashcam that doesn't just record — it understands. Real-time alerts, intelligent incident detection, and peace of mind built into every drive.</p>
+          <div class="hero-actions">
+            <button class="btn-primary">Get early access</button>
+            <button class="btn-ghost">See how it works →</button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="dashcam-frame">
+            <svg class="road-svg" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M200 300 L120 150 L80 0" stroke="white" stroke-width="1.5" opacity="0.4"/>
+              <path d="M200 300 L280 150 L320 0" stroke="white" stroke-width="1.5" opacity="0.4"/>
+              <path d="M200 300 L200 100" stroke="white" stroke-width="1" stroke-dasharray="10 8" opacity="0.3"/>
+              <path d="M0 200 Q200 160 400 200" stroke="white" stroke-width="0.8" opacity="0.15"/>
+              <path d="M0 140 Q200 100 400 140" stroke="white" stroke-width="0.8" opacity="0.1"/>
+              <path d="M0 90 Q200 60 400 90" stroke="white" stroke-width="0.8" opacity="0.08"/>
+              <rect x="60" y="60" width="40" height="60" rx="4" fill="white" fill-opacity="0.06" stroke="white" stroke-opacity="0.15" stroke-width="0.5"/>
+              <rect x="300" y="80" width="35" height="55" rx="4" fill="white" fill-opacity="0.06" stroke="white" stroke-opacity="0.15" stroke-width="0.5"/>
+              <circle cx="60" cy="220" r="25" fill="none" stroke="#C47B3A" stroke-width="0.8" stroke-opacity="0.5"/>
+              <circle cx="60" cy="220" r="18" fill="none" stroke="#C47B3A" stroke-width="0.5" stroke-opacity="0.3"/>
+            </svg>
+          </div>
+          <div class="hud-overlay">
+            <div class="hud-alert"><div class="pulse-dot"></div>AI alert: vehicle too close</div>
+            <div class="hud-row">
+              <div class="hud-chip"><strong>62 km/h</strong>Speed</div>
+              <div class="hud-chip"><strong>4K</strong>Recording</div>
+              <div class="hud-chip"><strong>Active</strong>AI Shield</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <p class="section-eyebrow">Built for every Indian driver</p>
+        <h2 class="section-title">One device. Every road. Every story.</h2>
+        <div class="audience-grid">
+          <div class="audience-card">
+            <div class="audience-icon">🏠</div>
+            <div class="audience-name">Families</div>
+            <div class="audience-desc">Know your loved ones are protected on every school run and weekend drive.</div>
+          </div>
+          <div class="audience-card">
+            <div class="audience-icon">🏙️</div>
+            <div class="audience-name">Urban drivers</div>
+            <div class="audience-desc">Navigate city chaos with real-time AI that has your back at every signal.</div>
+          </div>
+          <div class="audience-card">
+            <div class="audience-icon">🚕</div>
+            <div class="audience-name">Cab drivers</div>
+            <div class="audience-desc">Protect your livelihood and your passengers with always-on incident recording.</div>
+          </div>
+          <div class="audience-card">
+            <div class="audience-icon">🚛</div>
+            <div class="audience-name">Fleets</div>
+            <div class="audience-desc">Manage your entire fleet from one dashboard. Real-time visibility, lower risk.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <p class="section-eyebrow">What makes us different</p>
+        <h2 class="section-title">Not just a camera. An intelligent co-pilot.</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <p class="feature-num">01</p>
+            <p class="feature-title">Real-time AI alerts</p>
+            <p class="feature-body">Detects tailgating, lane drift, and sudden stops — warning you before incidents happen.</p>
+          </div>
+          <div class="feature-card">
+            <p class="feature-num">02</p>
+            <p class="feature-title">4K incident recording</p>
+            <p class="feature-body">Crystal clear footage, automatically saved and encrypted when something goes wrong.</p>
+          </div>
+          <div class="feature-card">
+            <p class="feature-num">03</p>
+            <p class="feature-title">Cloud connected</p>
+            <p class="feature-body">Access your footage anywhere. Share with insurers in one tap. Always backed up.</p>
+          </div>
+          <div class="feature-card">
+            <p class="feature-num">04</p>
+            <p class="feature-title">Fleet intelligence</p>
+            <p class="feature-body">Live map view, driver scoring, and trip summaries for businesses managing multiple vehicles.</p>
+          </div>
+          <div class="feature-card">
+            <p class="feature-num">05</p>
+            <p class="feature-title">Made for India</p>
+            <p class="feature-body">Trained on Indian roads, Indian traffic, Indian conditions. Not an import. Built here.</p>
+          </div>
+          <div class="feature-card">
+            <p class="feature-num">06</p>
+            <p class="feature-title">Dead simple setup</p>
+            <p class="feature-body">Plug in. Pair. Drive. Five minutes from box to fully active on your windshield.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="tagline-band">
+        <p class="tagline-text">Where every<br><em>journey</em> begins.</p>
+        <p class="tagline-sub">Join thousands of early access drivers across India.</p>
+        <button class="tagline-btn">Request early access</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LETTER VIEW -->
+<div class="view" id="view-letter">
+  <div class="letter-wrap">
+    <div class="card">
+      <div class="gold-bar"></div>
+      <div class="letter-inner">
+
+        <div class="letterhead">
+          <div>
+            <div class="lh-company">Aarambh.ai</div>
+            <div class="lh-sub">The beginning</div>
+          </div>
+          <div class="lh-meta">
+            <div>The Start</div>
+            <div>March 25, 2026</div>
+          </div>
+        </div>
+
+        <p class="salutation">Dear Team,</p>
+
+        <div class="letter-section">
+          <div class="sec-label">Why we exist</div>
+          <p class="sec-p">Every single day, hundreds of millions of Indians get on the road. They deal with chaos, danger, uncertainty — and they do it without a single intelligent system looking out for them. No guidance. No protection. No record of what happened when things go wrong. That is the problem we are here to solve.</p>
+          <p class="sec-p">Arambh.ai exists to transform Indian road experiences. Not improve. Not optimise. Transform. We will give consumers security, confidence and guidance. We will give businesses the intelligence they need — Incident Management, Driver Profiles, Traffic Monitoring — systems that make the road smarter for everyone on it.</p>
+          <p class="sec-p">We start with a dashcam. But make no mistake — this is a platform. This is infrastructure. This is the kind of thing that, ten years from now, people will say changed how India moves.</p>
+        </div>
+
+        <div class="pullquote">
+          <p>I believe this project has the X factor to do something crazy. The kind of crazy that matters.</p>
+        </div>
+
+        <div class="letter-section">
+          <div class="sec-label">Where we stand today</div>
+          <p class="sec-p">I'm not going to dress this up. Technically, we have nothing yet but the vision. The GitHub organisation is live. We're talking to the right people. We're learning how to build a startup the right way — and we're implementing as we go. That's it. That's where we are.</p>
+          <p class="sec-p">And here's the thing — that's exactly where every company that ever mattered once stood. Before the product. Before the funding. Before the users. There was just a small group of people who chose to believe early, while it was still uncomfortable to do so.</p>
+          <p class="sec-p">You are that group. You are here at the beginning — and that means something profound. The people in this room right now will one day be the origin story.</p>
+        </div>
+
+        <div class="letter-section">
+          <div class="sec-label">The honest part</div>
+          <p class="sec-p">Right now, before we raise funding, we are all working on this part time — me included. I know that. I respect that. And I am not asking you to give what you don't have. What I am asking is simpler: give what you can, when you can, and make it count.</p>
+          <p class="sec-p">The dream we're chasing is big enough to deserve your best moments — not just your spare ones. So whenever you show up for Arambh, show up fully. One great contribution this week is worth more than ten half-hearted ones.</p>
+        </div>
+
+        <div class="letter-section">
+          <div class="sec-label">How we build together</div>
+          <p class="sec-p">There are no fixed lanes here. No waiting to be told what to do. If you see something that needs doing — a problem to solve, a task to list, a question to answer — pick it up. Self-assign. Move. Right now, the act of listing things to do is itself a contribution. The act of showing up and saying "I'll take that" is leadership.</p>
+          <p class="sec-p">Ownership is everything at Arambh. Not because we demand it — but because the people who own things are the ones who build things. Once you pick something up, it's yours. See it through. Don't let it sit. Ownership questioned is ownership lost — and we will never be that kind of team.</p>
+          <p class="sec-p">We are building a culture right now, in these early days, whether we intend to or not. Every action, every commitment, every moment of initiative — that's what Arambh will be made of. Let's make it something worth being proud of.</p>
+        </div>
+
+        <div class="letter-section">
+          <div class="sec-label">What I need from you — today</div>
+          <p class="sec-p">Don't wait for the product to be ready. Don't wait for funding. Don't wait for someone to tell you the perfect moment to contribute. The perfect moment is now. Open the GitHub. Find a task. Write something down. Talk to someone who should know about what we're building. Do one thing today that moves Arambh one step forward.</p>
+          <p class="sec-p">Because here's what I know to be true: startups are not built by grand gestures. They are built by small acts of courage, repeated every day, by people who refused to wait until they were certain.</p>
+        </div>
+
+        <div class="letter-callout">
+          <p>The road is long. The curve is steep. The work is real.</p>
+          <p>But the story we're writing — the one that transforms how a billion people experience the road — is worth every bit of it.</p>
+          <p>This is Arambh. This is the beginning. Let's build.</p>
+        </div>
+
+        <div class="signature">
+          <div class="sign-closing">With belief, honesty, and a great deal of excitement,</div>
+          <div class="sign-name">Shailendra Sekhar</div>
+          <div class="sign-title">CEO & Co-founder, Aarambh.ai</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Aarambh<span>.ai</span></div>
+  <div class="footer-copy">© 2026 Aarambh.ai · Mumbai, India</div>
+</footer>
+
+<script>
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (name !== 'home') {
+    const link = document.getElementById('nav-' + name);
+    if (link) link.classList.add('active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('themeLabel').textContent = next === 'dark' ? 'Dark' : 'Light';
+  localStorage.setItem('aarambh_theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('aarambh_theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeLabel').textContent = saved === 'dark' ? 'Dark' : 'Light';
+  }
+})();
+</script>
+</body>
+</html>
